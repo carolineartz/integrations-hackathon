@@ -8,11 +8,11 @@ provider:
   runtime: nodejs14.x
 
 functions:
-  hello:
-    handler: handler.hello
+  cocktail:
+    handler: handler.cocktail
     events:
       - httpApi:
-          path: /
+          path: /cocktail
           method: get
 
 plugins:
