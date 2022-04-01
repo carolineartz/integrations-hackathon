@@ -15,5 +15,11 @@ functions:
           path: /cocktail
           method: get
 
+  disasterGif:
+    handler: handler.disasterGif
+    events:
+      - httpApi:
+          path: /disaster-gif
+          method: get
 plugins:
   - serverless-offline

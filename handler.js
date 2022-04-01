@@ -49,6 +49,45 @@ module.exports.cocktail = async (event) => {
   }
 };
 
+module.exports.disasterGif = async (event) => {
+  try {
+    let dataString = '';
+
+    const response = await new Promise((resolve, reject) => {
+      const req = https.get(generateGiphyUrl(), (resp) => {
+        resp.on('data', (chunk) => {
+          dataString += chunk;
+        })
+
+        resp.on('end', () => {
+          const data = JSON.parse(dataString);
+          const url = getWorriedGifSrc(data)
+
+          resolve({
+            statusCode: 200,
+            body: JSON.stringify({ url }, null, 2)
+          });
+        });
+      })
+
+      req.on('error', (error) => {
+        console.log(error)
+        reject({
+          statusCode: 500,
+          body: `Unexpected error ${error.message}. Please check logs.`
+        });
+      });
+    })
+
+    return response
+  } catch (error) {
+    console.log(error)
+    return {
+      statusCode: 500,
+      body: `Unexpected error ${error.message}. Please check logs.`
+    }
+  }
+}
 
 function extractRecipe(drink) {
   const recipe = [`*${drink.strDrink}*\n`]
@@ -69,4 +108,19 @@ function extractRecipe(drink) {
   })
 
   return recipe.join("\n")
+}
+
+
+const TOTAL_COUNT = 500
+
+function generateGiphyUrl() {
+  const offset = Math.floor(Math.random() * (TOTAL_COUNT - 1)) + 1
+
+  return `https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_API_KEY}&q=worried&limit=1&offset=${offset}`
+}
+
+function getWorriedGifSrc(payload) {
+  const item = payload.data[0]
+
+  return item.images.original.url
 }
