@@ -23,5 +23,14 @@ functions:
       - httpApi:
           path: /disaster-gif
           method: get
+
+  doneGif:
+    handler: handler.doneGif
+    environment:
+        GIPHY_API_KEY: ${param:GIPHY_API_KEY}
+    events:
+      - httpApi:
+          path: /done-gif
+          method: get
 plugins:
   - serverless-offline
