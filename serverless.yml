@@ -17,6 +17,8 @@ functions:
 
   disasterGif:
     handler: handler.disasterGif
+    environment:
+        GIPHY_API_KEY: ${param:GIPHY_API_KEY}
     events:
       - httpApi:
           path: /disaster-gif
